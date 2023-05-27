@@ -1,0 +1,11 @@
+.tab-index tbody tr td{
+    font-size: 12px;
+}
+
+body{
+    background-image: url("cool-background.png");
+}
+
+navbar{
+    background: transparent;
+}

@@ -17,6 +17,8 @@
                         <Label class="fw-bold"><i>Full PDF</i></Label>
                         <br>
                         <a href="{{ asset('storage/docs/'.$article->file) }}">Buka</a>
+                        
+                        
                     </div>
                 </div>
             </div>

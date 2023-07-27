@@ -4,51 +4,45 @@ namespace App\Http\Controllers;
   
 use App\Models\Article;
 use App\Models\Author;
+use App\Models\Jurusan;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
   
 class ArticleController extends Controller
 {
     public function index(Request $request): View
     {
-        //get posts
-        // $articles = Article::latest()->with('author')->paginate(5);
-
-        $articles = Article::where([
-            ['article_title', '!=', Null],
-            [function ($query) use ($request){
-                if (($term = $request->term)) {
-                    $query->orWhere('article_title', 'LIKE', '%' . $term . '%')->get();
-                }
-            }]
-        ])
-        ->orderBy('id', "desc")
-        ->paginate(10);
-        
-        //render view with posts
-        return view('article.index', compact('articles'))
-        ->with('i', (request()->input('page', 1) - 1) * 5);
+        $articles = Article::all();
+        // dd($articles);
+        return view('admin.artikel', compact('articles'));
     }
 
     public function create(): View
     {
+        $jurusan = Jurusan::all();
         
-        return view('article.create');
+        return view('admin.addArtikel', compact('jurusan'));
     }
 
     public function store(Request $request): RedirectResponse
     {
-            //ver 1
         //validate form
         $this->validate($request, [
-            'article_title'     => 'required|min:10',
-            'abstract'   => 'required|min:10',
+            'article_title'     => 'required',
+            'abstract'   => 'required',
+            'first_name'   => 'required|max:100',
+            'middle_name'   => 'required|max:100',
+            'last_name'   => 'required|max:100',
             'file'     => 'required|mimes:pdf|max:10000',
         ]);
-
+        $id_user = auth()->user()->id_user;
         $file = $request->file('file');
         $file->storeAs('public/docs', $file->hashName());
 
@@ -56,7 +50,9 @@ class ArticleController extends Controller
         $article = Article::create([
             'article_title'     => $request->article_title,
             'abstract'   => $request->abstract,
-            'file' => $file->hashName()
+            'file' => $file->hashName(),
+            'id_user' => $id_user,
+            'id_jurusan' => $request->id_jurusan
         ]);
 
         Author::create([
@@ -65,45 +61,6 @@ class ArticleController extends Controller
             'middle_name'     => $request->middle_name,
             'last_name'   => $request->last_name
         ]);
-
-                // dd($newTask);
-
-        // $article = new Article();
-        // $article->article_title = $request->input("article_title");
-        // $article->abstract = $request->input("abstract");
-        // $article->file = $request->input("hashName()");
-        // $article->save();
-
-        // $author = new Author();
-        // $author->article_id = $article->id;
-        // $author->first_name = $request->input("first_name");
-        // $author->middle_name = $request->input("middle_name");
-        // $author->last_name = $request->input("last_name");
-        // $author->save();
-
-                // ver 3
-        // $data = $request -> all();
-
-        // Validator::make($data, [
-        //     'article_title' => 'required|min:10',
-        //     'abstract' => 'required|min:10',
-        //     'file' => 'required|mimes:pdf|max:10000',
-        // ])->validate();
-        
-        // $article = Article::make($request -> all());
-        // $article -> save();
-
-        // $newauthor = Author::make($request -> all());
-        // $article = Article::findOrFail($request -> get('article_id'));
-        // $newauthor -> employee() -> associate($article);
-        // $newauthor -> save();
-        
-        // if (array_key_exists('author', $data)) {
-        //     $author = Author::findOrFail($data['author']);
-        // } else {
-        //     $author = [];
-        // }
-        // $article -> author() -> attach($author); 
 
         return redirect()->route('article.index')->with(['success' => 'Data Berhasil Disimpan!']);
     }
@@ -115,7 +72,7 @@ class ArticleController extends Controller
         $article = Article::findOrFail($id);
 
         //render view with post
-        return view('article.show', compact('article'));
+        return view('admin.showArtikel', compact('article'));
     }
 
     public function edit(string $id): View
@@ -123,60 +80,72 @@ class ArticleController extends Controller
         //get post by ID
         $article = Article::findOrFail($id);
         $author = Author::all();
+        $jurusan = Jurusan::all();
 
         //render view with post
-        return view('article.edit', compact('article'));
+        return view('admin.editArtikel', compact('article'), compact('jurusan'));
     }
     
     public function update(Request $request, $id): RedirectResponse
     {
         //validate form
         $this->validate($request, [
-            'article_title'     => 'required|min:10',
-            'abstract'   => 'required|min:10',
-            'first_name'   => 'required',
-            'middle_name'   => 'required',
-            'last_name'   => 'required'
+            'article_title'     => 'required',
+            'abstract'   => 'required',
+            'first_name'   => 'required|max:100',
+            'middle_name'   => 'required|max:100',
+            'last_name'   => 'required|max:100',
+            'file'     => 'mimes:pdf|max:10000'
         ]);
-        // //get post by ID
-        // $article = Article::findOrFail($id);
-
-        // $article->update([
-        //     'article_title'     => $request->article_title,
-        //     'abstract'   => $request->abstract
-        // ]);
-        // $author = new Author();
-        // $author->update([
-        //     'first_name'     => $request->first_name,
-        //     'middle_name'   => $request->middle_name,
-        //     'last_name'   => $request->last_name
-        // ]);
-
         $article = Article::find($id);
 
-        $article->article_title = $request->input('article_title');
-        $article->abstract = $request->input('abstract');
-        
-        $article->save();
+        if ($request->hasFile('file')) {
+            $fileName = Str::random(5).'_'. round(microtime(true) * 1000) . '.' . $request->file->getClientOriginalExtension();
+                            $request->file('file')->storeAs('docs', $fileName, 'public');
+            $update['file'] = $fileName;
+            Storage::disk('public')->delete('docs/'.$article->file);
+            $article->update($update);
+            $article->update([
+                'article_title'     => $request->article_title,
+                'abstract'   => $request->abstract,
+                'id_jurusan' => $request->id_jurusan
+                ]);
 
-        $article->author()->update([
-            'first_name' => $request->input('first_name'),
-            'middle_name' => $request->input('middle_name'),
-            'last_name' => $request->input('last_name')
-        ]);
+            $article->author()->update([
+                'first_name' => $request->input('first_name'),
+                'middle_name' => $request->input('middle_name'),
+                'last_name' => $request->input('last_name')
+                ]);              
+            } else {
+                $article->update([
+                'article_title'     => $request->article_title,
+                'abstract'   => $request->abstract,
+                'id_jurusan' => $request->id_jurusan
+                ]);
+
+                $article->author()->update([
+                    'first_name' => $request->input('first_name'),
+                    'middle_name' => $request->input('middle_name'),
+                    'last_name' => $request->input('last_name')
+                ]);
+        }
+
         //redirect to index
         return redirect()->route('article.index')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
-    public function destroy($id): RedirectResponse
+    public function destroy(Request $request, $id): RedirectResponse
     {
         //get post by ID
         $article = Article::findOrFail($id);
 
         //delete post
-        $article->delete();
+            Storage::disk('public')->delete('docs/'.$article->file);
+            $article->delete();
 
         //redirect to index
         return redirect()->route('article.index')->with(['success' => 'Data Berhasil Dihapus!']);
     }
+
+
 }

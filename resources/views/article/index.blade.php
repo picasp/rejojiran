@@ -14,8 +14,8 @@
                             <div class="d-flex mb-4">
                             <a href="{{ route('article.create') }}" class="btn btn-md btn-success mb-3">Tambah</a>
                             <form action="{{ route('article.index') }}" class="subnav-search d-flex flex-nowrap ms-auto" method="get" role="search">
-                            <input class="form-control search mb-3" name ="term" type="search" placeholder="Pencarian" aria-label="Search" id="term">
-                            <button class="btn btn-outline-success mb-3" type="submit">Cari</button>
+                            <input class="form-control search mb-3 rounded-start rounded-0 border-end-0" name ="term" type="search" placeholder="Pencarian" aria-label="Search" id="term">
+                            <button class="btn btn-success mb-3 rounded-end rounded-0 border-start-0" type="submit">Cari</button>
                             </form>
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                                 </tr>
                               @empty
                                   <div class="alert alert-danger">
-                                      Data Post belum Tersedia.
+                                      TIdak ada artikel yang ditemukan.
                                   </div>
                               @endforelse
                             </tbody>
@@ -63,4 +63,5 @@
             </div>
         </div>
     </div>
+
 @endsection    

@@ -48,14 +48,15 @@ class LoginRegisterController extends Controller
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'role' => 2
         ]);
 
         $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);
         $request->session()->regenerate();
         return redirect()->route('dashboard')
-        ->withSuccess('You have successfully registered & logged in!');
+        ->withSuccess('Anda berhasil mendaftar dan login!');
     }
 
     /**
@@ -85,7 +86,7 @@ class LoginRegisterController extends Controller
         {
             $request->session()->regenerate();
             return redirect()->route('dashboard')
-                ->withSuccess('You have successfully logged in!');
+                ->withSuccess('Selamat anda berhasil login!');
         }
 
         return back()->withErrors([
@@ -103,13 +104,39 @@ class LoginRegisterController extends Controller
     {
         if(Auth::check())
         {
-            return view('auth.dashboard');
+            if (auth()->user()->role === 1) {
+                return view('admin.index');
+            }else{
+                return redirect()->route('user.index');
+            }
         }
         
         return redirect()->route('login')
             ->withErrors([
-            'email' => 'Please login to access the dashboard.',
+            'email' => 'Login untuk mengakses dashboard.',
         ])->onlyInput('email');
+    } 
+
+    public function acticle()
+    {
+        if(Auth::check())
+        {
+            if (auth()->user()->role === 1) {
+                return view('admin.artikel');
+            }else{
+                return redirect()->route('user.article');
+            }
+        }
+        
+        return redirect()->route('login')
+            ->withErrors([
+            'email' => 'Login untuk mengakses dashboard.',
+        ])->onlyInput('email');
+    } 
+
+    public function user()
+    {
+        return view('user.index');
     } 
     
     /**
@@ -124,7 +151,7 @@ class LoginRegisterController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('login')
-            ->withSuccess('You have logged out successfully!');;
+            ->withSuccess('Berhasil keluar!');;
     }    
 
 }

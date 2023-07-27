@@ -2,10 +2,247 @@
     font-size: 12px;
 }
 
-body{
-    background-image: url("cool-background.png");
+#jurnalTable th,
+#jurnalTable td {
+  font-size: 14px;
 }
 
-navbar{
-    background: transparent;
+#jurnalTable tr {
+  transition-duration: 0.4s;
 }
+
+#jurnalTable tr:hover {
+  transition-duration: 0.4s;
+  background-color:#cdcfd1;
+}
+
+.parent_main {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    background-color: #4A1B9D;
+  }
+  
+  .child_sub {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .container {
+    background-color: white;
+  }
+
+  #db {
+    background-color: transparent;
+  }
+
+  #header_log{
+    width: 100%;
+    background-color: #300E6A;
+    position: fixed;
+    top: 0;
+    height: 60px !important;
+    z-index: 2;
+  }
+
+  #sidebar {
+    background-color: #5C27AD;
+    position: fixed;
+    width: 15vw;
+    height: 100%;
+    top: 60px;
+    left: 0;
+    z-index: 1;
+    opacity: 0.9;
+  }
+
+  #ctn{
+    margin-top: 60px;
+    height: 100%;
+    width: 100%;
+  }
+
+  #scrollable{
+    height: 100%;
+    /* margin-left: 200px; */
+    margin-left: 15vw;
+  }
+
+  #scrollable-2{
+    margin-top: 60px;
+  }
+  
+  .dropdown .dropdown-menu{
+    right: 0;
+    left: auto;
+  }
+  
+  #menu li a{
+    color: white;
+  }
+
+  .auth-ct div div button{
+    transition-duration: 0.4s;
+    background-color: #FF9800;
+    color: white;
+  }
+
+  .auth-ct div div button:hover{
+    background-color: black;
+    color: white;
+  }
+
+  iframe{
+    width: 100%;
+    height: 50vw;
+  }
+
+  h1{
+    color: white;
+  }
+
+  a{
+    text-decoration: none;
+  }
+
+  .modal-title{
+    color: black;
+  }
+
+  /* .table-row{
+    transition-duration: 0.4s;
+  }
+
+  .table-row:hover{
+    background-color:#cdcfd1;
+  } */
+
+  #list-item{
+    background: #fff;
+    box-shadow: 0 6px 10px rgba(0,0,0,.08), 0 0 6px rgba(0,0,0,.05);
+      transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+    cursor: pointer;
+  }
+
+  #list-item:hover{
+    transform: scale(1.006);
+    box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+  }
+
+  .title{
+    color: black;
+  }
+
+  h3 {
+    color: black;
+  }
+
+  h4{
+    color: black;
+  }
+
+  #alert{
+    color: red;
+  }
+
+  td{
+    vertical-align: middle;
+  }
+
+  #search-btn{
+    background-color: orange;
+    cursor: pointer;
+  }
+  #search-btn:hover{
+    color: white;
+    background-color: orange;
+    opacity: 80%;
+  }
+
+  /* .modal-confirm {		
+    color: #636363;
+    width: 400px;
+  }
+  .modal-confirm .modal-content {
+    padding: 20px;
+    border-radius: 5px;
+    border: none;
+    text-align: center;
+    font-size: 14px;
+  }
+  .modal-confirm .modal-header {
+    border-bottom: none;   
+    position: relative;
+  }
+  .modal-confirm h4 {
+    text-align: center;
+    font-size: 26px;
+    margin: 30px 0 -10px;
+  }
+  .modal-confirm .close {
+    position: absolute;
+    top: -5px;
+    right: -2px;
+  }
+  .modal-confirm .modal-body {
+    color: #999;
+  }
+  .modal-confirm .modal-footer {
+    border: none;
+    text-align: center;		
+    border-radius: 5px;
+    font-size: 13px;
+    padding: 10px 15px 25px;
+  }
+  .modal-confirm .modal-footer a {
+    color: #999;
+  }		
+  .modal-confirm .icon-box {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    border-radius: 50%;
+    z-index: 9;
+    text-align: center;
+    border: 3px solid #f15e5e;
+  }
+  .modal-confirm .icon-box i {
+    color: #f15e5e;
+    font-size: 46px;
+    display: inline-block;
+    margin-top: 13px;
+  }
+  .modal-confirm .btn, .modal-confirm .btn:active {
+    color: #fff;
+    border-radius: 4px;
+    background: #60c7c1;
+    text-decoration: none;
+    transition: all 0.4s;
+    line-height: normal;
+    min-width: 120px;
+    border: none;
+    min-height: 40px;
+    border-radius: 3px;
+    margin: 0 5px;
+  }
+  .modal-confirm .btn-secondary {
+    background: #c1c1c1;
+  }
+  .modal-confirm .btn-secondary:hover, .modal-confirm .btn-secondary:focus {
+    background: #a8a8a8;
+  }
+  .modal-confirm .btn-danger {
+    background: #f15e5e;
+  }
+  .modal-confirm .btn-danger:hover, .modal-confirm .btn-danger:focus {
+    background: #ee3535;
+  }
+  .trigger-btn {
+    display: inline-block;
+    margin: 100px auto;
+  } */
+
+    
+  
